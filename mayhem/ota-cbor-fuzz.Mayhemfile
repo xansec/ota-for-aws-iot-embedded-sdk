@@ -1,0 +1,8 @@
+image: ghcr.io/xansec/ota-for-aws-iot-embedded-sdk
+duration: 1200
+project: ota-for-aws-iot-embedded-sdk
+target: ota-cbor-fuzz
+
+cmds:
+  - cmd: /ota_cbor_fuzz
+    libfuzzer: true

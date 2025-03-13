@@ -107,3 +107,8 @@ add_custom_target( coverage
     DEPENDS cmock unity ota_utest ota_base64_utest ota_cbor_utest
     WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
 )
+
+
+#  ===================== Fuzz target support ====================================
+
+add_subdirectory( fuzz )
