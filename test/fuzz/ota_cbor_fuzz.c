@@ -21,7 +21,7 @@
 
 int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size) {
     if (size == 0 || size > CBOR_TEST_MESSAGE_BUFFER_SIZE) {
-        return 0;
+        return -1;
     }
 
     int32_t fileId, blockIndex, blockSize, payloadSize = -1;
@@ -41,7 +41,7 @@ int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size) {
             size,
             &encodedSize,
             msgValidity)) {
-        return 0;
+        return -1;
     }
 
     if (!OTA_CBOR_Decode_GetStreamResponseMessage(
