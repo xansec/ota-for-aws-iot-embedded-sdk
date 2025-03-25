@@ -75,7 +75,7 @@ int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size) {
 
     for( i = 0; i < ( int ) size; ++i ) {
         if (cborWork[i] != data[i]) {
-            abort();
+            __builtin_trap();
         }
     }
 
