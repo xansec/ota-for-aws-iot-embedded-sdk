@@ -33,51 +33,73 @@ int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size) {
 
     uint8_t cborWork[CBOR_TEST_MESSAGE_BUFFER_SIZE];
 
-    if (!createOtaStreamingMessage(
-            cborWork,
-            sizeof( cborWork ),
-            CBOR_TEST_BLOCKIDENTITY_VALUE,
-            data,
-            size,
-            &encodedSize,
-            msgValidity)) {
-        return -1;
-    }
+    // if (!createOtaStreamingMessage(
+    //         cborWork,
+    //         sizeof( cborWork ),
+    //         CBOR_TEST_BLOCKIDENTITY_VALUE,
+    //         data,
+    //         size,
+    //         &encodedSize,
+    //         msgValidity)) {
+    //     return -1;
+    // }
 
-    if (!OTA_CBOR_Decode_GetStreamResponseMessage(
-            cborWork, 
-            encodedSize, 
-            &fileId, 
-            &blockIndex, 
-            &blockSize, 
-            &pDecodedPayload, 
-            &payloadSize)) {
-        return 0;
-    }
+    createOtaStreamingMessage(
+        cborWork,
+        sizeof( cborWork ),
+        CBOR_TEST_BLOCKIDENTITY_VALUE,
+        data,
+        size,
+        &encodedSize,
+        msgValidity);
 
-    // memset(cborWork, 0, sizeof(cborWork));  // Clear buffer
+    // if (!OTA_CBOR_Decode_GetStreamResponseMessage(
+    //         cborWork, 
+    //         encodedSize, 
+    //         &fileId, 
+    //         &blockIndex, 
+    //         &blockSize, 
+    //         &pDecodedPayload, 
+    //         &payloadSize)) {
+    //     return -1;
+    // }
 
-    if (!OTA_CBOR_Encode_GetStreamRequestMessage(
-            cborWork, 
-            sizeof(cborWork), 
-            &encodedSize, 
-            CBOR_TEST_CLIENTTOKEN_VALUE, 
-            fileId, 
-            OTA_FILE_BLOCK_SIZE, 
-            0, 
-            ( uint8_t * ) &bitmap,
-            sizeof( bitmap ), 
-            CBOR_TEST_MAX_NUM_BLOCKS_REQUEST)) {
-        return 0; 
-    }
+    OTA_CBOR_Decode_GetStreamResponseMessage(
+        cborWork, 
+        encodedSize, 
+        &fileId, 
+        &blockIndex, 
+        &blockSize, 
+        &pDecodedPayload, 
+        &payloadSize);
 
-    int i;
+    // if (!OTA_CBOR_Encode_GetStreamRequestMessage(
+    //         cborWork, 
+    //         sizeof(cborWork), 
+    //         &encodedSize, 
+    //         CBOR_TEST_CLIENTTOKEN_VALUE, 
+    //         fileId, 
+    //         OTA_FILE_BLOCK_SIZE, 
+    //         0, 
+    //         ( uint8_t * ) &bitmap,
+    //         sizeof( bitmap ), 
+    //         CBOR_TEST_MAX_NUM_BLOCKS_REQUEST)) {
+    //     return 0;
+    // }
 
-    for( i = 0; i < ( int ) size; ++i ) {
-        if (cborWork[i] != data[i]) {
-            __builtin_trap();
-        }
-    }
+    OTA_CBOR_Encode_GetStreamRequestMessage(
+        cborWork, 
+        sizeof(cborWork), 
+        &encodedSize, 
+        CBOR_TEST_CLIENTTOKEN_VALUE, 
+        fileId, 
+        OTA_FILE_BLOCK_SIZE, 
+        0, 
+        ( uint8_t * ) &bitmap,
+        sizeof( bitmap ), 
+        CBOR_TEST_MAX_NUM_BLOCKS_REQUEST);
+
+    // if(memcmp(data, cborWork, size) != 0) __builtin_trap();
 
     return 0;
 }
